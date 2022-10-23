@@ -13,10 +13,10 @@ namespace CSharpFundamentals
                 .ToList();
             
             string command = Console.ReadLine();
+            bool isValidIndex = false;
             int count = 0;
             int successCount = 0;
-            bool isMatch = false;
-            List<string> matchElements = new List<string>();
+            string currentMachValue = "";
             
             while (command != "end")
             {
@@ -24,48 +24,54 @@ namespace CSharpFundamentals
                 int firstIndex = int.Parse(cmdArgs[0]); 
                 int secondIndex = int.Parse(cmdArgs[1]);
                 
-                string firstValue = games[firstIndex];
-                string secondValue = games[secondIndex];
+                count++;
                 
-                if (firstValue == secondValue) 
+                if (firstIndex >= 0 && firstIndex < games.Count && secondIndex >= 0 && secondIndex < games.Count && firstIndex != secondIndex)
                 {
-                    isMatch = true;
-                    successCount++;
-                    matchElements.Add(firstValue);
+                    isValidIndex = true;
                 }
-                
-                for (int i = 0; i < games.Count; i++)
+                 
+                if (isValidIndex)
                 {
-                    if (isMatch) 
+                
+                    string firstValue = games[firstIndex];
+                    string secondValue = games[secondIndex];
+                
+                    if (firstValue == secondValue) 
                     {
+                        currentMachValue = firstValue;
+                        successCount++;
+                        Console.WriteLine($"Congrats! You have found matching elements - {currentMachValue}!");
                         games.RemoveAll(el => el == firstValue);
+                    }
+                    else 
+                    {
+                        Console.WriteLine($"Try again!");
                     }
                 }
                 
-                count++;
+                else if (isValidIndex == false && games.Count > 0)
+                {
+                    games.Insert(games.Count / 2, $"-{count}a");
+                    games.Insert(games.Count / 2, $"-{count}a");
+                    Console.WriteLine("Invalid input! Adding additional elements to the board");
+                }
+                
+                isValidIndex = false;
                 
                 command = Console.ReadLine();
             }
             
             if (games.Count > 0)
             {
-                for (int i = 1; i <= count; i++)
-                {
-                    Console.WriteLine($"Try again!");
-                }
                 Console.WriteLine("Sorry you lose :(");
                 Console.WriteLine(String.Join(" ", games));
             }
-            
             else
             {
+                Console.WriteLine($"You have won in {successCount} turns!");
+            }
             
-            foreach (string el in matchElements)
-            {
-                Console.WriteLine($"Congrats! You have found matching elements - {el}!");
-            }
-            Console.WriteLine($"You have won in {successCount} turns!");
-            }
         }
     }
 }
